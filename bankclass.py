@@ -89,7 +89,7 @@ class BankWindows:
                     queu = "select * from applicant where apno=" + str(ac)
                     mycur.execute(queu)
                     result = mycur.fetchone()
-                    if mycur.rowcount != 0:
+                    if result is not None:
                         labelnameanswer.config(text=result[1])
                         labelname.place(x=55, y=70)
                         labelnameanswer.place(x=300, y=71)
@@ -203,27 +203,30 @@ class BankWindows:
                                                    charset='utf8',
                                                    password='')
                     mycur = mydb.cursor()
-                    mycur.execute("select balance from applicant where apno = " + str(acno))
+                    mycur.execute("select * from applicant where apno = " + str(acno))
                     result = mycur.fetchone()
-                    if withdrawlamount > result[0]:
-                        messagebox.showerror("Balance Problem", "Insufficient Balance")
-                    else:
-                        balance = result[0] - withdrawlamount
-                        today = datetime.date.today()
-                        formatted_date = today.strftime("%d-%m-%Y")
-                        que = "update applicant set balance = " + str(balance) + " where apno = " + str(acno)
-                        mycur.execute(que)
-                        mydb.commit()
-                        que = "insert into withdrawl(sldate, apno, amount) values('" + formatted_date + "', '" + str(
-                            acno) + "', '" + str(withdrawlamount) + "')"
-                        mycur.execute(que)
-                        mydb.commit()
-                        if mycur.rowcount == 0:
-                            messagebox.showerror("Something Went Wront", "Unable to Make Transaction")
+                    if result is not None:
+                        mycur.execute("select balance from applicant where apno = " + str(acno))
+                        result = mycur.fetchone()
+                        if withdrawlamount > result[0]:
+                            messagebox.showerror("Balance Problem", "Insufficient Balance")
                         else:
-                            messagebox.showinfo("Done", "Transaction has been done successfully\nAccount No = " + str(
-                                acno) + "\nwithdrawl Amount = " + str(withdrawlamount))
-                        withdrawlwindow.destroy()
+                            balance = result[0] - withdrawlamount
+                            today = datetime.date.today()
+                            formatted_date = today.strftime("%d-%m-%Y")
+                            que = "update applicant set balance = " + str(balance) + " where apno = " + str(acno)
+                            mycur.execute(que)
+                            mydb.commit()
+                            que = "insert into withdrawl(sldate, apno, amount) values('" + formatted_date + "', '" + str(
+                                acno) + "', '" + str(withdrawlamount) + "')"
+                            mycur.execute(que)
+                            mydb.commit()
+                            if mycur.rowcount == 0:
+                                messagebox.showerror("Something Went Wront", "Unable to Make Transaction")
+                            else:
+                                messagebox.showinfo("Done", "Transaction has been done successfully\nAccount No = " + str(
+                                    acno) + "\nwithdrawl Amount = " + str(withdrawlamount))
+                            withdrawlwindow.destroy()
                 except ValueError:
                     messagebox.showerror("Invalid", "Invalid Amount")
 
@@ -243,7 +246,7 @@ class BankWindows:
                     q = "select * from applicant where apno=" + str(ac)
                     mycur.execute(q)
                     result = mycur.fetchone()
-                    if mycur.rowcount != 0:
+                    if result is not None:
 
                         labelnameanswer.config(text=result[1])
                         labelname.place(x=55, y=70)
@@ -341,7 +344,7 @@ class BankWindows:
                     q = "select * from applicant where apno=" + str(ac)
                     mycur.execute(q)
                     result = mycur.fetchone()
-                    if mycur.rowcount != 0:
+                    if result is not None:
                         labelnameanswer.config(text=result[1])
                         labelname.place(x=55, y=70)
                         labelnameanswer.place(x=300, y=71)
@@ -492,7 +495,7 @@ class BankWindows:
                     q = "select * from applicant where apno=" + str(ac)
                     mycur.execute(q)
                     result = mycur.fetchone()
-                    if mycur.rowcount != 0:
+                    if result is not None:
                         depositamountlabel.place(x=50, y=70)
                         depositamountentry.place(x=300, y=70)
 
@@ -608,7 +611,7 @@ class BankWindows:
                     q = "select * from applicant where apno=" + str(ac)
                     mycur.execute(q)
                     result = mycur.fetchone()
-                    if mycur.rowcount != 0:
+                    if result is not None:
                         namelabel.place(x=50, y=70)
                         nameentry.place(x=300, y=70)
                         nameentry.delete(0, END)
